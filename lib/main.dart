@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/ui/test/view.dart';
-import 'package:flutter_application_1/ui/view.dart';
-
+import 'features/products/domain/usecases/get_products.dart';
+import 'features/products/presentation/pages/products_screen.dart';
 import 'injection_container.dart';
 
 Future<void> main() async {
@@ -13,18 +12,17 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final getProductsUseCase = sl<GetProducts>();
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home:AddProductScreen());
-      // const MyHomePage(title: 'Flutter Demo Home Page'),
-
+      home: ProductsView(getProducts: getProductsUseCase),
+    );
   }
 }
 
