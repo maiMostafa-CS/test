@@ -4,7 +4,7 @@ import '../../../../core/network/endpiont.dart';
 import '../models/ products_response_model.dart';
 
 abstract class ProductRemoteDataSource {
-  Future<ProductsResponseModel> getProducts();
+  Future<NetworkResponse> getProducts();
 }
 
 class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
@@ -13,7 +13,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   ProductRemoteDataSourceImpl(this.apiHelper);
 
   @override
-  Future<ProductsResponseModel> getProducts() async {
+  Future<NetworkResponse> getProducts() async {
     final response = await apiHelper.apiCall<ProductsResponseModel>(
       products,
       requestType: RequestType.get,
@@ -22,6 +22,7 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
       mapper: (json) => ProductsResponseModel.fromJson(json),
     );
 
-    return response.data;
+    return response;
   }
 }
+

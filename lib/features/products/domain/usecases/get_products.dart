@@ -1,4 +1,7 @@
+import 'package:flutter_application_1/features/products/data/models/%20products_response_model.dart';
 import 'package:flutter_application_1/features/products/domain/entities/product.dart';
+import '../../../../core/network/api_helper.dart';
+import '../../../../core/network/endpiont.dart';
 import '../repositories/product_repository.dart';
 
 class GetProducts {
@@ -8,6 +11,7 @@ class GetProducts {
 
   Future<List<Product>> call() async {
     final response = await repository.getProducts();
-    return response.products;
+    return response.data!.products ?? [];
+
   }
 }

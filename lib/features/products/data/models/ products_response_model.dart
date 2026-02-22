@@ -20,4 +20,12 @@ class ProductsResponseModel extends ProductsResponse {
       limit: json['limit'],
     );
   }
+  Map<String, Object> toJson() {
+    return {
+      'products': products.map((e) => (e as ProductModel).toJson()).toList(),
+      'total': total,
+      'skip': skip,
+      'limit': limit,
+    };
+  }
 }

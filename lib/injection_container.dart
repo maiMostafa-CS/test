@@ -3,6 +3,11 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 
 import 'core/network/api_helper.dart';
+import 'features/addProducts/data/datasources/repo.dart';
+import 'features/addProducts/data/repositories/addProductsRepositories_impl.dart';
+import 'features/addProducts/domain/repositories/addProductsRepositories.dart';
+import 'features/addProducts/domain/usecases/add_product.dart';
+import 'features/addProducts/presentation/bloc/addProduct_bloc.dart';
 import 'features/products/data/datasources/repo.dart';
 import 'features/products/data/repositories/product_repository_impl.dart';
 import 'features/products/domain/repositories/product_repository.dart';
@@ -20,21 +25,40 @@ Future<void> init() async {
   sl.registerLazySingleton<ApiHelper>(
         () => ApiHelper(sl()),
   );
-  sl.registerLazySingleton<ProductsRepo>(
-        () => ProductsRepo(sl()),
-  );
   sl.registerLazySingleton<ProductRemoteDataSource>(
         () => ProductRemoteDataSourceImpl(sl()),
   );
 
+  // Repository
   sl.registerLazySingleton<ProductRepository>(
         () => ProductRepositoryImpl(sl()),
   );
 
-  sl.registerLazySingleton(() => GetProducts(sl()));
-
-// Register Bloc
-  sl.registerFactory(
-        () => ProductsBloc(sl<GetProducts>()),
+  // UseCase
+  sl.registerLazySingleton<GetProducts>(
+        () => GetProducts(sl()),
   );
+
+
+
+
+
+
+  sl.registerLazySingleton<AddProductsRepo>(
+        () => AddProductsRepoImpl(sl()),
+  );
+
+  // Repository
+  sl.registerLazySingleton<AddProductsRepository>(
+        () => addProductsRepositoriesImpl(sl()),
+  );
+
+  // UseCase
+  sl.registerLazySingleton<AddProducts>(
+        () => AddProducts(sl()),
+  );
+
+  // Bloc
+  sl.registerFactory<AddProductBloc>(() => AddProductBloc(sl()));
 }
+

@@ -1,6 +1,8 @@
+import '../../../../core/network/api_helper.dart';
 import '../../domain/entities/ products_response.dart';
 import '../../domain/repositories/product_repository.dart';
 import '../datasources/repo.dart';
+import '../models/ products_response_model.dart';
 
 class ProductRepositoryImpl implements ProductRepository {
   final ProductRemoteDataSource remoteDataSource;
@@ -8,7 +10,7 @@ class ProductRepositoryImpl implements ProductRepository {
   ProductRepositoryImpl(this.remoteDataSource);
 
   @override
-  Future<ProductsResponse> getProducts() async {
+  Future<NetworkResponse> getProducts() async {
     return await remoteDataSource.getProducts();
   }
 }
