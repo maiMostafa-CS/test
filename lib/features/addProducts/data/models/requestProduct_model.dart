@@ -1,6 +1,6 @@
-import 'package:flutter_application_1/features/addProducts/domain/entities/requestProduct.dart';
+import '../../domain/entities/responseProduct.dart';
 
-class RequestProductModel extends RequestProduct {
+class RequestProductModel extends ResponseProduct {
   RequestProductModel({
     required super.title,
     required super.description,

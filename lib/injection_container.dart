@@ -1,4 +1,3 @@
-import 'package:flutter_application_1/ui/test/repo.dart';
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 

@@ -1,4 +1,4 @@
-import '../../../../ui/test/model.dart';
+import '../../domain/entities/responseProduct.dart';
 
 class ResponseProductModel extends ResponseProduct{
   ResponseProductModel({
