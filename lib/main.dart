@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'core/network/base_url.dart';
 import 'features/addProducts/presentation/view/addProduct_screen.dart';
+import 'features/products/presentation/view/products_screen.dart';
 import 'injection_container.dart';
 
 Future<void> main() async {
@@ -17,7 +18,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AddProductScreen(),
+      home:
+      // ProductsView(),
+       AddProductScreen(),
     );
   }
 }

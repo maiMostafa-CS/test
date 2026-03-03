@@ -1,30 +1,30 @@
-// import '../../../../core/network/api_helper.dart';
-// import '../../../../core/network/apis/addProduct.api.dart';
-// import '../../domain/entities/requestProduct.dart';
-// import '../../domain/entities/responseProduct.dart';
-// import '../../domain/repositories/addProductsRepositories.dart';
-// import '../models/requestProduct_model.dart';
-// import '../models/responseProduct_model.dart';
-//
-// /// Concrete implementation of [AddProductsRepository].
-// /// Lives in the data layer — the only place allowed to know about HTTP.
-// abstract class AddProductRemoteDataSource {
-//   Future<ResponseProduct> addProduct(RequestProduct request);
-// }
-//
-//
-// class AddProductRemoteDataSourceImpl implements AddProductRemoteDataSource {
-//   final ApiHelper apiHelper;
-//
-//   AddProductRemoteDataSourceImpl(this.apiHelper);
-//
-//   @override
-//   Future<ResponseProduct> addProduct(RequestProduct request) async {
-//     final response = await apiHelper.apiCall<ResponseProductModel,RequestProduct>(
-//       api: AddProductAPI.postProduct,
-//       body: request,
-//       mapper: (json) => ResponseProductModel.fromJson(json),
-//     );
-//     return response.data!;
-//   }
-// }
+import '../../../../core/network/api_helper.dart';
+import '../../../../core/network/apis/addProduct.api.dart';
+import '../../domain/entities/requestProduct.dart';
+import '../../domain/entities/responseProduct.dart';
+import '../../domain/repositories/addProductsRepositories.dart';
+import '../models/requestProduct_model.dart';
+import '../models/responseProduct_model.dart';
+
+/// Concrete implementation of [AddProductsRepository].
+/// Lives in the data layer — the only place allowed to know about HTTP.
+abstract class AddProductRemoteDataSource {
+  Future<ResponseProduct> addProduct(RequestProductModel request);
+}
+
+
+class AddProductRemoteDataSourceImpl implements AddProductRemoteDataSource {
+  final ApiHelper apiHelper;
+
+  AddProductRemoteDataSourceImpl(this.apiHelper);
+
+  @override
+  Future<ResponseProduct> addProduct(RequestProductModel request) async {
+    final response = await apiHelper.apiCall<ResponseProductModel,RequestProductModel>(
+      api: AddProductAPI.postProduct,
+      body: request,
+      mapper: (json) => ResponseProductModel.fromJson(json),
+    );
+    return response.data!;
+  }
+}

@@ -36,9 +36,9 @@ Future<void> init() async {
   );
   // ─── Add Product (submit) ────────────────────────────────────
 // 1. Data source
-//   locator.registerLazySingleton<AddProductRemoteDataSource>(
-//         () => AddProductRemoteDataSourceImpl(locator()), // make sure constructor expects Dio or ApiHelper
-//   );
+  locator.registerLazySingleton<AddProductRemoteDataSource>(
+        () => AddProductRemoteDataSourceImpl(locator()), // make sure constructor expects Dio or ApiHelper
+  );
 
 // 2. Repository
   locator.registerLazySingleton<AddProductsRepository>(

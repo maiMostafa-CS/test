@@ -25,7 +25,7 @@ class AddProductScreen extends StatelessWidget {
             appBar: AppBar(title: const Text("Add Product")),
 
             onSuccess: (data) => _buildForm(context, data),
-            // onInitial: () => _buildForm(context, null),
+              onInitial: () => _buildForm(context, null),
 
             onListener: (context, state) {
               if (state is SuccessState<ResponseProduct>) {
