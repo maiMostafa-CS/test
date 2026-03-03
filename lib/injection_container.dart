@@ -2,62 +2,56 @@ import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
 
 import 'core/network/api_helper.dart';
+import 'core/repositories/api_repository.dart';
+
 import 'features/addProducts/data/datasources/repo.dart';
-import 'features/addProducts/data/repositories/addProductsRepositories_impl.dart';
-import 'features/addProducts/domain/repositories/addProductsRepositories.dart';
-import 'features/addProducts/domain/usecases/add_product.dart';
-import 'features/addProducts/presentation/bloc/addProduct_bloc.dart';
 import 'features/products/data/datasources/repo.dart';
 import 'features/products/data/repositories/product_repository_impl.dart';
 import 'features/products/domain/repositories/product_repository.dart';
 import 'features/products/domain/usecases/get_products.dart';
 import 'features/products/presentation/bloc/products_bloc.dart';
 
-final sl = GetIt.instance;
+import 'features/addProducts/domain/repositories/addProductsRepositories.dart';
+import 'features/addProducts/domain/usecases/add_product.dart';
+import 'features/addProducts/data/repositories/addProducts_repository_impl.dart';
+import 'features/addProducts/presentation/bloc/addProduct_bloc.dart';
+
+final locator = GetIt.instance;
 
 Future<void> init() async {
+  // ─── External ────────────────────────────────────────────────
+  locator.registerLazySingleton<Dio>(() => createDio());
 
-  /// External
-  sl.registerLazySingleton<Dio>(() => createDio());
+  // ─── Core ────────────────────────────────────────────────────
+  locator.registerLazySingleton<ApiHelper>(() => ApiHelper(locator()));
+  locator.registerLazySingleton<ApiRepository>(() => ApiRepository(locator()));
 
-  /// Core
-  sl.registerLazySingleton<ApiHelper>(
-        () => ApiHelper(sl()),
+  // ─── Products (fetch) ────────────────────────────────────────
+  locator.registerLazySingleton<GetProducts>(() => GetProducts(locator()));
+  locator.registerFactory<ProductsBloc>(() => ProductsBloc(locator()));
+  locator.registerLazySingleton<ProductRemoteDataSource>(
+        () => ProductRemoteDataSourceImpl(locator()),);
+  locator.registerLazySingleton<ProductRepository>(
+        () => ProductRepositoryImpl( locator()),
   );
-  sl.registerLazySingleton<ProductRemoteDataSource>(
-        () => ProductRemoteDataSourceImpl(sl()),
-  );
+  // ─── Add Product (submit) ────────────────────────────────────
+// 1. Data source
+//   locator.registerLazySingleton<AddProductRemoteDataSource>(
+//         () => AddProductRemoteDataSourceImpl(locator()), // make sure constructor expects Dio or ApiHelper
+//   );
 
-  // Repository
-  sl.registerLazySingleton<ProductRepository>(
-        () => ProductRepositoryImpl(sl()),
-  );
-
-  // UseCase
-  sl.registerLazySingleton<GetProducts>(
-        () => GetProducts(sl()),
-  );
-
-
-
-
-
-
-  sl.registerLazySingleton<AddProductsRepo>(
-        () => AddProductsRepoImpl(sl()),
+// 2. Repository
+  locator.registerLazySingleton<AddProductsRepository>(
+        () => AddProductsRepositoryImpl(locator()), // resolves AddProductRemoteDataSource
   );
 
-  // Repository
-  sl.registerLazySingleton<AddProductsRepository>(
-        () => addProductsRepositoriesImpl(sl()),
+// 3. Use case
+  locator.registerLazySingleton<AddProducts>(
+        () => AddProducts(locator()), // resolves AddProductsRepository
   );
 
-  // UseCase
-  sl.registerLazySingleton<AddProducts>(
-        () => AddProducts(sl()),
+// 4. Bloc
+  locator.registerFactory<AddProductBloc>(
+        () => AddProductBloc(locator()), // resolves AddProducts use case
   );
-
-  // Bloc
-  sl.registerFactory<AddProductBloc>(() => AddProductBloc(sl()));
 }
-

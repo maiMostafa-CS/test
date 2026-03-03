@@ -1,6 +1,8 @@
-import '../../domain/entities/responseProduct.dart';
+import '../../domain/entities/requestProduct.dart';
 
-class RequestProductModel extends ResponseProduct {
+/// Data-layer model that extends the domain [RequestProduct] entity.
+/// Adds JSON serialization — the domain entity stays clean.
+class RequestProductModel extends RequestProduct {
   RequestProductModel({
     required super.title,
     required super.description,
@@ -14,7 +16,6 @@ class RequestProductModel extends ResponseProduct {
       'description': description,
       'price': price,
       'brand': brand,
-
     };
   }
 }

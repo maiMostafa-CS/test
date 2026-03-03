@@ -120,5 +120,5 @@ class TimeOutException extends DioException {
   }
 }
 Map<String, String>  getHeaders({String? sessionToken})=> {
-"SessionToken":sessionToken??''
+if(sessionToken!= null)"SessionToken":sessionToken??''
 };

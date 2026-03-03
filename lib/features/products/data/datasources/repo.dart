@@ -1,7 +1,8 @@
+import 'dart:ffi';
+
 import '../../../../core/network/api_helper.dart';
-import '../../../../core/network/api_utilities.dart';
-import '../../../../core/network/endpiont.dart';
-import '../models/ products_response_model.dart';
+import '../../../../core/network/apis/product.api.dart';
+import '../models/products_response_model.dart';
 
 abstract class ProductRemoteDataSource {
   Future<NetworkResponse> getProducts();
@@ -14,10 +15,8 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
 
   @override
   Future<NetworkResponse> getProducts() async {
-    final response = await apiHelper.apiCall<ProductsResponseModel>(
-      products,
-      requestType: RequestType.get,
-      sessionToken: "dummyToken",
+    final response = await apiHelper.apiCall<ProductsResponseModel,Void>(
+      api: ProductAPI.getProduct,
       headers: {"Custom-Header": "CustomValue"},
       mapper: (json) => ProductsResponseModel.fromJson(json),
     );

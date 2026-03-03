@@ -1,16 +1,17 @@
-import '../../../../core/network/api_helper.dart';
 import '../../data/models/requestProduct_model.dart';
-import '../../data/models/responseProduct_model.dart';
+import '../entities/responseProduct.dart';
 import '../repositories/addProductsRepositories.dart';
+import '../../../../core/usecases/base_usecase.dart';
 
-class AddProducts {
+/// Domain use case — only imports domain entities and repo interface.
+/// Zero knowledge of HTTP, API endpoints, or data models.
+class AddProducts implements SubmitUseCase<RequestProductModel, ResponseProduct> {
   final AddProductsRepository repository;
 
   AddProducts(this.repository);
 
-  Future<NetworkResponse> call({
-    required RequestProductModel requestProductModel,
-  }) {
-    return repository.addProducts(requestProductModel: requestProductModel);
+  @override
+  Future<ResponseProduct> call(RequestProductModel request) {
+    return repository.addProduct(request);
   }
 }

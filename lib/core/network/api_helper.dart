@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:dio_http_formatter/dio_http_formatter.dart';
+import 'package:flutter/foundation.dart';
 import 'api_utilities.dart';
+import 'base.api.dart';
+import 'base_url.dart';
 
 
 class ApiHelper {
@@ -8,64 +13,50 @@ class ApiHelper {
 
   ApiHelper(this._dio);
 
-  Future<NetworkResponse> apiCall<T>(
-      String url, {
-       Map<String, dynamic>? queryParameters,
-        Map<String, dynamic>?  body,
-        String? sessionToken,
-        required RequestType requestType,
+  Future<NetworkResponse<T>> apiCall<T,V>({
+        Map<String, dynamic>? queryParameters,
+        V?  body,
+        required API api,
         Map<String, String>? headers,
+        String? pathParam,
         T Function(Map<String, dynamic>)? mapper,
       }) async {
 
     late Response result;
-
+   if(kDebugMode){
+   if(body != null) {
+     var jsonBody = (body is String) ? body : (body is List)
+    ? body
+    : (body as dynamic).toJson?.call();
+log(' request body: $jsonBody');
+   }}
     try {
-      final options = Options(
+      final options = RequestOptions(
+        baseUrl: _dio.options.baseUrl,
         headers: {
-          ...getHeaders(sessionToken: sessionToken),
+          ...getHeaders(sessionToken: ''),//will get session token from static method get value from secure storage
           ...?headers,
+          ..._dio.options.headers,
         },
+        method: api.method.name,
+        queryParameters: queryParameters,
+        data: body,
+        path: "${api.path}${pathParam!= null?"/$pathParam": ""}",
       );
-      switch (requestType) {
-        case RequestType.get:
-          result = await _dio.get(url,
-              queryParameters: queryParameters, options: options);
-          break;
-
-        case RequestType.post:
-          result =
-          await _dio.post(url, data: body, options: options,);
-          break;
-
-        case RequestType.put:
-          result =
-          await _dio.put(url, data: body, options: options);
-          break;
-
-        case RequestType.delete:
-          result =
-          await _dio.delete(url, data: body, options: options);
-          break;
-
-        case RequestType.patch:
-          result =
-          await _dio.patch(url, data: body, options: options);
-          break;
-      }
+      result =  await _dio.fetch(options);
       if (mapper != null && result.data is Map<String, dynamic>) {
         return NetworkResponse.success(mapper(result.data));
       }
 
-      return NetworkResponse.success(result.data);
+      return NetworkResponse.success(result.data as T);
     } on DioException catch (error) {
       return NetworkResponse.error(error);
     }
   }
 }
 Dio createDio() {
-  const timeOut = Duration(seconds: 20);
-  const baseURL = "https://dummyjson.com/";
+  const timeOut = Duration(seconds: 30);
+  String  baseURL = "${ServiceUrl().baseUrl}/";
   final dio = Dio(BaseOptions(
     baseUrl: baseURL,
     receiveTimeout: timeOut,
