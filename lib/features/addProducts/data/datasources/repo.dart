@@ -1,31 +1,30 @@
 import '../../../../core/network/api_helper.dart';
-import '../../../../core/network/api_utilities.dart';
-import '../../../../core/network/endpiont.dart';
+import '../../../../core/network/apis/addProduct.api.dart';
+import '../../domain/entities/requestProduct.dart';
+import '../../domain/entities/responseProduct.dart';
+import '../../domain/repositories/addProductsRepositories.dart';
 import '../models/requestProduct_model.dart';
 import '../models/responseProduct_model.dart';
 
-abstract class AddProductsRepo {
-  Future<NetworkResponse> addProducts({
-    required  RequestProductModel requestProductModel,
-  });
-
+/// Concrete implementation of [AddProductsRepository].
+/// Lives in the data layer — the only place allowed to know about HTTP.
+abstract class AddProductRemoteDataSource {
+  Future<ResponseProduct> addProduct(RequestProductModel request);
 }
-class AddProductsRepoImpl extends AddProductsRepo {
+
+
+class AddProductRemoteDataSourceImpl implements AddProductRemoteDataSource {
   final ApiHelper apiHelper;
 
-  AddProductsRepoImpl(this.apiHelper);
+  AddProductRemoteDataSourceImpl(this.apiHelper);
 
   @override
-  Future<NetworkResponse> addProducts({
-    required RequestProductModel requestProductModel,
-  }) async {
-    return apiHelper.apiCall<ResponseProductModel>(
-      addProduct,
-      requestType: RequestType.post,
-      body: requestProductModel.toJson(),
-      sessionToken: "dummyToken",
-      headers: {"Custom-Header": "CustomValue"},
+  Future<ResponseProduct> addProduct(RequestProductModel request) async {
+    final response = await apiHelper.apiCall<ResponseProductModel,RequestProductModel>(
+      api: AddProductAPI.postProduct,
+      body: request,
       mapper: (json) => ResponseProductModel.fromJson(json),
     );
+    return response.data!;
   }
 }

@@ -1,5 +1,5 @@
-import '  product_model.dart';
-import '../../domain/entities/ products_response.dart';
+import 'package:flutter_application_1/features/products/data/models/product_model.dart';
+import '../../domain/entities/products_response.dart';
 
 
 class ProductsResponseModel extends ProductsResponse {
